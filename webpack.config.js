@@ -8,7 +8,8 @@ const OUTPUT_DIR = path.resolve(__dirname, "dist");
 const defaultInclude = [SRC_DIR];
 
 module.exports = {
-  entry: SRC_DIR + "/index.js",
+  mode: "development",
+  entry: SRC_DIR + "/index.tsx",
   output: {
     path: OUTPUT_DIR,
     publicPath: "/dist/",
@@ -17,8 +18,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        use: [{ loader: "babel-loader" }],
+        test: /\.(tsx|ts)$/,
+        use: [{ loader: "babel-loader" }, { loader: "ts-loader" }],
         include: defaultInclude
       }
     ]
