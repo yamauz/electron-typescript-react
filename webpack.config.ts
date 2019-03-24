@@ -1,13 +1,13 @@
-const webpack = require("webpack");
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { spawn } = require("child_process");
+import * as path from "path";
+import * as webpack from "webpack";
+import * as HtmlWebpackPlugin from "html-webpack-plugin";
+import { spawn } from "child_process";
 const SRC_DIR = path.resolve(__dirname, "src");
 const OUTPUT_DIR = path.resolve(__dirname, "dist");
 
 const defaultInclude = [SRC_DIR];
 
-module.exports = {
+const config: webpack.Configuration = {
   mode: "development",
   entry: SRC_DIR + "/index.tsx",
   output: {
@@ -54,3 +54,5 @@ module.exports = {
     }
   }
 };
+
+export default config;
