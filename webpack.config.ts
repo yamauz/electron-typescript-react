@@ -7,24 +7,21 @@ const OUTPUT_DIR = path.resolve(__dirname, "dist");
 
 const defaultInclude = [SRC_DIR];
 
-const config: webpack.Configuration = {
+const baseConfig: webpack.Configuration = {
   mode: "development",
-  entry: SRC_DIR + "/index.tsx",
   output: {
-    path: OUTPUT_DIR,
-    publicPath: "/dist/",
-    filename: "bundle.js"
+    publicPath: "/dist/"
   },
   module: {
     rules: [
       {
         test: /\.(tsx|ts)$/,
-        use: [{ loader: "babel-loader" }, { loader: "ts-loader" }],
+        use: [{ loader: "ts-loader" }],
         include: defaultInclude
       }
     ]
   },
-  target: "electron-renderer",
+  // target: "electron-renderer",
   plugins: [
     new HtmlWebpackPlugin({
       template: "public/index.html",
@@ -44,7 +41,7 @@ const config: webpack.Configuration = {
       children: false
     },
     before() {
-      spawn("electron", ["./public/electron.js"], {
+      spawn("electron", ["./dist/bandle.main.js"], {
         shell: true,
         env: process.env,
         stdio: "inherit"
@@ -55,4 +52,24 @@ const config: webpack.Configuration = {
   }
 };
 
-export default config;
+const mainConfig: webpack.Configuration = Object.assign({}, baseConfig, {
+  name: "main",
+  target: "electron-main",
+  entry: SRC_DIR + "/main.ts",
+  output: {
+    path: OUTPUT_DIR,
+    filename: "bandle.main.js"
+  }
+});
+const rendererConfig: webpack.Configuration = Object.assign({}, baseConfig, {
+  name: "renderer",
+  target: "electron-renderer",
+  entry: SRC_DIR + "/index.tsx",
+  output: {
+    path: OUTPUT_DIR,
+    filename: "bandle.renderer.js"
+  }
+});
+
+// export default config;
+module.exports = [mainConfig, rendererConfig];
