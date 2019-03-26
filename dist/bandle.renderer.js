@@ -24738,7 +24738,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 var App = function () {
-    return React.createElement("div", { id: "container" }, "hello!!");
+    return React.createElement("div", { id: "container" }, "hello!!!");
 };
 ReactDOM.render(React.createElement(App, null), document.getElementById("app"));
 exports.default = App;

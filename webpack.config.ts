@@ -4,14 +4,10 @@ import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import { spawn } from "child_process";
 const SRC_DIR = path.resolve(__dirname, "src");
 const OUTPUT_DIR = path.resolve(__dirname, "dist");
-
 const defaultInclude = [SRC_DIR];
 
 const baseConfig: webpack.Configuration = {
   mode: "development",
-  output: {
-    publicPath: "/dist/"
-  },
   module: {
     rules: [
       {
@@ -21,15 +17,12 @@ const baseConfig: webpack.Configuration = {
       }
     ]
   },
-  // target: "electron-renderer",
   plugins: [
     new HtmlWebpackPlugin({
       template: "public/index.html",
       inject: "body"
     }),
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("development")
-    })
+    new webpack.HotModuleReplacementPlugin()
   ],
 
   devtool: "cheap-source-map",
@@ -40,13 +33,17 @@ const baseConfig: webpack.Configuration = {
       chunks: false,
       children: false
     },
+    inline: true,
+    host: "0.0.0.0",
+    port: 3000,
+    hot: true,
     before() {
       spawn("electron", ["./dist/bandle.main.js"], {
         shell: true,
         env: process.env,
         stdio: "inherit"
       })
-        .on("close", code => process.exit(0))
+        .on("close", () => process.exit(0))
         .on("error", spawnError => console.error(spawnError));
     }
   }
@@ -71,5 +68,4 @@ const rendererConfig: webpack.Configuration = Object.assign({}, baseConfig, {
   }
 });
 
-// export default config;
 module.exports = [mainConfig, rendererConfig];
